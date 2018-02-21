@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -34,6 +37,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
+        //the place where parsing json method is called, returning a sandwich object
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
@@ -43,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +60,36 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
 
+        TextView mainNameTv = findViewById(R.id.main_name_tv);
+        TextView alsoKnownAsTv = findViewById(R.id.also_known_tv);
+        TextView placeOfOriginTv = findViewById(R.id.origin_tv);
+        TextView descriptionTv = findViewById(R.id.description_tv);
+        TextView ingredientsTv = findViewById(R.id.ingredients_tv);
+
+        mainNameTv.setText(sandwich.getMainName());
+        alsoKnownAsTv.setText(buildStringFromList(sandwich.getAlsoKnownAs()));
+        placeOfOriginTv.setText(sandwich.getPlaceOfOrigin());
+        descriptionTv.setText(sandwich.getDescription());
+        ingredientsTv.setText(buildStringFromList(sandwich.getIngredients()));
+
+    }
+
+    private String buildStringFromList(List<String> jsonArrayValues){
+
+        String seperator = " , ";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if(jsonArrayValues != null) {
+            for (String value : jsonArrayValues) {
+                stringBuilder.append(value);
+                stringBuilder.append(seperator);
+            }
+
+            return stringBuilder.toString();
+        } else {
+            return "n/a";
+        }
     }
 }

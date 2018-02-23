@@ -1,5 +1,6 @@
 package com.udacity.sandwichclub.utils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.udacity.sandwichclub.model.Sandwich;
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
@@ -35,6 +37,10 @@ public class JsonUtils {
             alsoKnownAs = formatArrayList(alsoKnownAsArray);
 
             placeOfOrigin = sandwichObject.getString("placeOfOrigin");
+            if (TextUtils.isEmpty(placeOfOrigin)){
+                placeOfOrigin = "unknown";
+            }
+
             description = sandwichObject.getString("description");
             sandwichImage = sandwichObject.getString("image");
 
@@ -53,7 +59,7 @@ public class JsonUtils {
 
     //method to format arrays within Json
     private static List<String> formatArrayList(JSONArray jsonArray) throws JSONException {
-        List<String> jsonArrayInList = null;
+        List<String> jsonArrayInList = new ArrayList<>();
         if (jsonArray.length() == 0) {
             return null;
         }
